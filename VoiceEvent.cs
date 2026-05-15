@@ -13,6 +13,9 @@
         engineDamage,
         takeDamage,
         noFlares,
+        lowFlares,
+        flares,
+        jammer,
 
         // RWR alerts, RwrOn is fallback
         RwrOnFox3,
