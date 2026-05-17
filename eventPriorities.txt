@@ -8,7 +8,10 @@ partDetach = 82
 # Enginedamage, fallback to takeDamage
 engineDamage = 81
 takeDamage = 80
-noFlares = 72
+noFlares = 100
+lowFlares = 80
+flares = 80
+jammer = 80
 
 # RWR alerts, fallback to RwrOn
 RwrOnFox3 = 70

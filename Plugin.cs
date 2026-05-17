@@ -24,6 +24,9 @@ namespace WSOYappinator
         private ConfigEntry<string> SelectedSet;
         private ConfigEntry<bool> VerboseLogs;
         private ConfigEntry<float> idleAfterSeconds;
+        public ConfigEntry<float> lowAltitude;
+        public ConfigEntry<float> highAltitude;
+        public ConfigEntry<float> fuelRatioBingo;
         private float _nextIdleAttemptAt;
         private string _audioRoot;
         private Harmony _harmony;
@@ -62,6 +65,10 @@ namespace WSOYappinator
                 45f,
                 "Play the Idle event if no voiceline has successfully played for this many seconds. Set to 0 to disable."
             );
+
+            lowAltitude = Config.Bind("General", "Low altitude below", 5f);
+            highAltitude = Config.Bind("General", "High altitude above", 15000f);
+            fuelRatioBingo =  Config.Bind("General", "Bingo fuel below ratio", 0.2f, new ConfigDescription("Ratio below the bingo fuel event is trigger", new AcceptableValueRange<float>(0.01f, 1f)));
 
             string[] sets = AudioPackDiscovery.Discover(_audioRoot);
             string firstSet = sets.Length == 0 ? "" : sets[0];
