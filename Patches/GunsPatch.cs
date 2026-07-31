@@ -15,7 +15,7 @@ namespace WSOYappinator.Patches
             bool both = __result && lookingAtTarget;
 
             if (both && !_lastBoth)
-                Plugin.I.TriggerVoiceline(VoiceEvent.guns);
+                Plugin.instance.TriggerVoiceline(VoiceEvent.guns);
 
             _lastBoth = both;
         }

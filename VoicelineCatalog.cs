@@ -7,13 +7,13 @@ using UnityEngine;
 
 namespace WSOYappinator
 {
-    public sealed class VoicelineCatalog()
+    public sealed class VoicelineCatalog
     {
-        private readonly System.Random _rnd = new();
-        public readonly Dictionary<VoiceEvent, List<AudioClip>> Clips = [];
-        private readonly Dictionary<VoiceEvent, List<AudioClip>> _shuffled = [];
-        private readonly Dictionary<VoiceEvent, int> _indices = [];
-        private readonly HashSet<AudioClip> _allClips = [];
+        private readonly System.Random _rnd = new System.Random();
+        public readonly Dictionary<VoiceEvent, List<AudioClip>> Clips = new Dictionary<VoiceEvent, List<AudioClip>>();
+        private readonly Dictionary<VoiceEvent, List<AudioClip>> _shuffled = new Dictionary<VoiceEvent, List<AudioClip>>();
+        private readonly Dictionary<VoiceEvent, int> _indices = new Dictionary<VoiceEvent, int>();
+        private readonly HashSet<AudioClip> _allClips = new HashSet<AudioClip>();
 
         public void Clear()
         {
@@ -28,23 +28,30 @@ namespace WSOYappinator
         {
             if (!Directory.Exists(audioSetFolder))
             {
-                Plugin.I.Log.LogWarning($"Missing audio folder: {audioSetFolder}");
+                Plugin.instance.Log.LogWarning($"Missing audio folder: {audioSetFolder}");
                 return;
             }
 
-            HashSet<VoiceEvent> keySet = [.. knownEvents];
-            Dictionary<string, AudioClip> clipCache = new(StringComparer.OrdinalIgnoreCase);
+            HashSet<VoiceEvent> keySet = new HashSet<VoiceEvent>(knownEvents);
+            Dictionary<string, AudioClip> clipCache = new Dictionary<string, AudioClip>(StringComparer.OrdinalIgnoreCase);
 
             foreach (string path in Directory.EnumerateFiles(audioSetFolder).Where(UnityWebRequestAudioLoader.SupportsFile))
             {
                 string name = Path.GetFileNameWithoutExtension(path);
 
                 IEnumerable<string> tokens = Regex.Split(name, "[^A-Za-z0-9]+").Where(t => !string.IsNullOrEmpty(t) && !t.All(char.IsDigit));
+                HashSet<VoiceEvent> matched = new HashSet<VoiceEvent>();
 
-                HashSet<VoiceEvent> matched = [];
-                foreach (string t in tokens)
+                if (VoiceEventMaps.TryParse(name, out VoiceEvent fullMatch) && keySet.Contains(fullMatch))
                 {
-                    if (VoiceEventMaps.TryParse(t, out VoiceEvent evt) && keySet.Contains(evt)) matched.Add(evt);
+                    matched.Add(fullMatch);
+                }
+                else
+                {
+                    foreach (string t in tokens)
+                    {
+                        if (VoiceEventMaps.TryParse(t, out VoiceEvent evt) && keySet.Contains(evt)) matched.Add(evt);
+                    }
                 }
 
                 if (matched.Count == 0) continue;
@@ -59,12 +66,12 @@ namespace WSOYappinator
 
                 foreach (VoiceEvent evt in matched)
                 {
-                    if (!Clips.TryGetValue(evt, out List<AudioClip> list)) Clips[evt] = list = [];
+                    if (!Clips.TryGetValue(evt, out List<AudioClip> list)) Clips[evt] = list = new List<AudioClip>();
                     list.Add(clip);
                 }
             }
 
-            foreach (KeyValuePair<VoiceEvent, List<AudioClip>> kvp in Clips) Plugin.I.Log.LogInfo($"Registered [{kvp.Key}] ({kvp.Value.Count} clips)");
+            foreach (KeyValuePair<VoiceEvent, List<AudioClip>> kvp in Clips) Plugin.instance.Log.LogInfo($"Registered [{kvp.Key}] ({kvp.Value.Count} clips)");
         }
 
         public AudioClip RequestClip(VoiceEvent key)
@@ -74,7 +81,7 @@ namespace WSOYappinator
 
             if (!_shuffled.TryGetValue(key, out List<AudioClip> pool) || pool == null || pool.Count != clips.Count)
             {
-                pool = [.. clips.Where(c => c != null)];
+                pool = clips.Where(c => c != null).ToList();
                 if (pool.Count == 0)
                 {
                     _shuffled.Remove(key);
@@ -103,11 +110,11 @@ namespace WSOYappinator
             return clip;
         }
 
-        public bool HasClips(VoiceEvent key) => Clips.TryGetValue(key, out List<AudioClip> list) && list is { Count: > 0 };
+        public bool HasClips(VoiceEvent key) => Clips.TryGetValue(key, out List<AudioClip> list) && list != null && list.Count > 0;
 
         private static void Shuffle<T>(IList<T> list, System.Random rnd = null)
         {
-            rnd ??= new System.Random();
+            if (rnd == null) rnd = new System.Random();
             for (int i = 0; i < list.Count; i++)
             {
                 int j = rnd.Next(i, list.Count);

@@ -1,4 +1,4 @@
-﻿namespace WSOYappinator
+namespace WSOYappinator
 {
     public enum VoiceEvent
     {
@@ -65,19 +65,7 @@
         FlightAssistOn,
         FlightAssistOff,
         AutohoverOn,
-        AutohoverOff,
-
-        OutcomeVictory,
-        OutcomeDefeat,
-        Escalation,
-        EscalationTactical,
-        EscalationStrategic,
-
-        FirstNuke,
-        FirstNukeFriendly,
-        FirstNukeHostile,
-
-        Idle,
+        AutohoverOff
     }
 }
 /*
@@ -89,11 +77,10 @@ fuelLeak,
 hookAttached, 
 hookReleased, 
 cargoDeployed,
-
-*/
-
-/* TODO See: MissionManager.onObjectiveStarted and onObjectiveCompleted
-ObjectiveNew,
-ObjectiveCompleted,
-ObjectiveFailed,
-*/
+waypointReached,
+objectiveComplete,
+objectiveFailed,
+objectiveDestroyed,
+missionVictory,
+missionDefeat,
+firstNukeStrike,*/

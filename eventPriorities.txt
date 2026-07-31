@@ -39,16 +39,6 @@ fireMissile = 55
 
 fireBomb = 55
 guns = 54
-
-OutcomeVictory = 45
-OutcomeDefeat = 45
-Escalation = 45
-EscalationTactical = 45
-EscalationStrategic = 45
-FirstNuke = 45
-FirstNukeFriendly = 45
-FirstNukeHostile = 45
-
 Disembark = 40
 onSortieSuccess = 35
 Touchdown = 34
@@ -72,4 +62,3 @@ FlightAssistOn = 5
 FlightAssistOff = 5
 AutohoverOn = 5
 AutohoverOff = 5
-Idle = 1

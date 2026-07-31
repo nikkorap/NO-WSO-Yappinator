@@ -11,10 +11,10 @@ namespace WSOYappinator.Patches
         private static void Postfix(MountedMissile __instance, Unit owner, Unit target, Vector3 inheritedVelocity,
                                     WeaponStation weaponStation, GlobalPosition aimpoint)
         {
-            if (GameManager.IsLocalAircraft(owner as Aircraft)) Plugin.I.TriggerVoiceline(ResolveFireEvent(__instance));
+            if (GameManager.IsLocalAircraft(owner as Aircraft)) Plugin.instance.TriggerVoiceline(ResolveFireEvent(__instance));
         }
 
-        private static readonly Dictionary<WeaponInfo, VoiceEvent> _fireEventCache = [];
+        private static readonly Dictionary<WeaponInfo, VoiceEvent> _fireEventCache = new Dictionary<WeaponInfo, VoiceEvent>();
 
         private static VoiceEvent ResolveFireEvent(MountedMissile mm)
         {
@@ -24,19 +24,17 @@ namespace WSOYappinator.Patches
 
             VoiceEvent result;
             if (info.nuclear) result = VoiceEvent.fireNuclear;
-            else if (info.bomb || info.name.Contains("glide",StringComparison.OrdinalIgnoreCase)) result = VoiceEvent.fireBomb;
+            else if (info.bomb || info.name.IndexOf("glide", StringComparison.OrdinalIgnoreCase) >= 0) result = VoiceEvent.fireBomb;
             else if (info.laserGuided) result = VoiceEvent.fireAGR;
             else
             {
-                result = (info.weaponPrefab ? info.weaponPrefab.GetComponent<MissileSeeker>() : null) switch
-                {
-                    IRSeeker => VoiceEvent.fireFox2,
-                    ARMSeeker => VoiceEvent.fireARM,
-                    ARHSeeker => VoiceEvent.fireFox3,
-                    OpticalSeeker => VoiceEvent.fireAGM,
-                    OpticalSeekerCruiseMissile => VoiceEvent.fireCruise,
-                    _ => VoiceEvent.fireMissile
-                };
+                MissileSeeker seeker = info.weaponPrefab ? info.weaponPrefab.GetComponent<MissileSeeker>() : null;
+                if (seeker is IRSeeker) result = VoiceEvent.fireFox2;
+                else if (seeker is ARMSeeker) result = VoiceEvent.fireARM;
+                else if (seeker is ARHSeeker) result = VoiceEvent.fireFox3;
+                else if (seeker is OpticalSeeker) result = VoiceEvent.fireAGM;
+                else if (seeker is OpticalSeekerCruiseMissile) result = VoiceEvent.fireCruise;
+                else result = VoiceEvent.fireMissile;
             }
 
             _fireEventCache[info] = result;

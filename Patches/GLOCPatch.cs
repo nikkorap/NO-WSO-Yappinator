@@ -11,7 +11,7 @@ namespace WSOYappinator.Patches
     {
         private static void Postfix(GLOC __instance)
         {
-            Plugin.I.TriggerVoiceline(VoiceEvent.onGLOC);
+            Plugin.instance.TriggerVoiceline(VoiceEvent.onGLOC);
         }
     }
 }

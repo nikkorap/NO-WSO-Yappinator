@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -7,7 +7,7 @@ namespace WSOYappinator
     public static class VoiceEventMaps
     {
         public static readonly Dictionary<string, VoiceEvent> StringAliases =
-            new(StringComparer.OrdinalIgnoreCase)
+            new Dictionary<string, VoiceEvent>(StringComparer.OrdinalIgnoreCase)
             {
                 ["jump"] = VoiceEvent.RareClip,
                 ["death"] = VoiceEvent.Death,
@@ -22,9 +22,17 @@ namespace WSOYappinator
                 ["fox3"] = VoiceEvent.fireFox3,
                 ["guns"] = VoiceEvent.guns,
                 ["spawn"] = VoiceEvent.Spawn,
+                ["rwr_on"] = VoiceEvent.RwrOn,
+                ["rwr_off"] = VoiceEvent.RwrOff,
+                ["rwr_on_fox1"] = VoiceEvent.RwrOnFox1,
+                ["rwr_on_fox2"] = VoiceEvent.RwrOnFox2,
+                ["rwr_on_fox3"] = VoiceEvent.RwrOnFox3,
+                ["rwr_off_fox1"] = VoiceEvent.RwrOffFox1,
+                ["rwr_off_fox2"] = VoiceEvent.RwrOffFox2,
+                ["rwr_off_fox3"] = VoiceEvent.RwrOffFox3,
             };
 
-        public static readonly Dictionary<VoiceEvent, VoiceEvent[]> Fallbacks = new()
+        public static readonly Dictionary<VoiceEvent, VoiceEvent[]> Fallbacks = new Dictionary<VoiceEvent, VoiceEvent[]>()
         {
             { VoiceEvent.fireFox2,new[] { VoiceEvent.fireMissile } },
             { VoiceEvent.fireFox3,new[] { VoiceEvent.fireMissile } },
@@ -48,12 +56,6 @@ namespace WSOYappinator
             { VoiceEvent.killAircraft,new[] { VoiceEvent.killGeneric} },
             { VoiceEvent.killBuilding,new[] { VoiceEvent.killGround, VoiceEvent.killGeneric } },
             { VoiceEvent.killGround,new[] { VoiceEvent.killGeneric} },
-
-            { VoiceEvent.EscalationTactical,new[] { VoiceEvent.Escalation} },
-            { VoiceEvent.EscalationStrategic,new[] { VoiceEvent.Escalation} },
-
-            { VoiceEvent.FirstNukeFriendly,new[] { VoiceEvent.FirstNuke} },
-            { VoiceEvent.FirstNukeHostile,new[] { VoiceEvent.FirstNuke} },
         };
 
         public static bool TryParse(string token, out VoiceEvent evt)

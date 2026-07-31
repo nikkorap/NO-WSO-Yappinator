@@ -10,15 +10,14 @@ namespace WSOYappinator.Patches
         {
             if (!GameManager.IsLocalPlayer(player)) return;
 
-            Plugin.I.TriggerVoiceline(target switch
-            {
-                GroundVehicle => VoiceEvent.killGround,
-                Building => VoiceEvent.killBuilding,
-                Aircraft => VoiceEvent.killAircraft,
-                Missile => VoiceEvent.killMissile,
-                Ship => VoiceEvent.killShip,
-                _ => VoiceEvent.killGeneric
-            });
+            VoiceEvent evt = VoiceEvent.killGeneric;
+            if (target is GroundVehicle) evt = VoiceEvent.killGround;
+            else if (target is Building) evt = VoiceEvent.killBuilding;
+            else if (target is Aircraft) evt = VoiceEvent.killAircraft;
+            else if (target is Missile) evt = VoiceEvent.killMissile;
+            else if (target is Ship) evt = VoiceEvent.killShip;
+            
+            Plugin.instance.TriggerVoiceline(evt);
         } 
     }
 }

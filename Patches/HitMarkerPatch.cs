@@ -12,7 +12,7 @@ namespace WSOYappinator.Patches
         private static void Postfix(CombatHUD __instance, GlobalPosition hitPosition, Unit hitUnit)
         {
             if (!GameManager.IsLocalAircraft(__instance.aircraft)) return;
-            Plugin.I.TriggerVoiceline(VoiceEvent.HitMarker);
+            Plugin.instance.TriggerVoiceline(VoiceEvent.HitMarker);
         }
     }
 }

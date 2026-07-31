@@ -12,9 +12,9 @@ namespace WSOYappinator.Patches
         private static void Postfix(Aircraft __instance, float fuelRatio)
         {
             if (!GameManager.IsLocalAircraft(__instance)) return;
-            if (fuelRatio < 0.2f) Plugin.I.TryGated(VoiceEvent.fuelLow);
-            if (__instance.radarAlt < 5f && __instance.speed > 100f) Plugin.I.TryGated(VoiceEvent.lowflying);
-            if (__instance.radarAlt > 15000f && __instance.speed > 100f) Plugin.I.TryGated(VoiceEvent.highflying);
+            if (fuelRatio < 0.2f) Plugin.instance.TryGated(VoiceEvent.fuelLow);
+            if (__instance.radarAlt < 5f && __instance.speed > 100f) Plugin.instance.TryGated(VoiceEvent.lowflying);
+            if (__instance.radarAlt > 15000f && __instance.speed > 100f) Plugin.instance.TryGated(VoiceEvent.highflying);
         }
     }
 }
